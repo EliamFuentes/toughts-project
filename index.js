@@ -15,8 +15,9 @@ const conn = require('./db/conn');
 const Tought = require('./models/Tought');
 const User = require('./models/User');
 
-// Registra rotas
+// Importar rotas
 const toughtsRoutes = require('./routes/toughtsRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Importa Controller
 const ToughtController = require('./controllers/ToughtController');
@@ -71,6 +72,8 @@ app.use((req, res, next) => {
 
 //Routes
 app.use('/toughts', toughtsRoutes);
+app.use('/', authRoutes);
+
 app.get('/', ToughtController.showToughts);
 
 conn
