@@ -1,21 +1,24 @@
+// Importa dependencias externas
 const express = require('express');
 const { engine } = require('express-handlebars');
 const session = require('express-session');
 const fileStore = require('session-file-store')(session);
 const flash = require('express-flash');
 
+// Cria a aplicação Express
 const app = express();
 
+// Cria a conexão com o banco de dados
 const conn = require('./db/conn');
 
-// Models
+// Importa models
 const Tought = require('./models/Tought');
 const User = require('./models/User');
 
-// Routes
+// Registra rotas
 const toughtsRoutes = require('./routes/toughtsRoutes');
 
-// Controller
+// Importa Controller
 const ToughtController = require('./controllers/ToughtController');
 
 //template engine
