@@ -55,8 +55,29 @@ module.exports = class AuthController {
             return res.render('auth/register', { name });
         }
 
-        req.flash('message', 'Usuário validado, agora pode cadastrar!');
-        return res.redirect('/login');
-    }
+        //criar senha criptografada
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
+        const user = {
+            name,
+            email,
+            password: hashedPassword,
+        };
+
+        try {
+            const createdUser = await User.create(user);
+
+            // ininiciar sessão
+            req.session.userid = createdUser.id;
+
+            req.flash('message', 'Usuário cadastrado com sucesso!');
+
+            req.session.save(() => {
+                res.redirect('/');
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 } // exporta a classe AuthController
