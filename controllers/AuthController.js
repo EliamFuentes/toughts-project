@@ -9,6 +9,34 @@ module.exports = class AuthController {
 
     } // Ação de login, static faz com que o método possa ser chamado sem instanciar a classe
 
+    static async loginPost(req, res) {
+        const { email, password } = req.body;
+
+        // encontrar usuário
+        const user = await User.findOne({ where: { email: email } });
+
+        if (!user) {
+            req.flash('message', 'Usuário não encontrado!');
+            return res.render('auth/login');
+        }
+
+        // verificar senha
+        const passwordMatch = bcrypt.compareSync(password, user.password);
+
+        if (!passwordMatch) {
+            req.flash('message', 'Senha inválida!');
+            return res.render('auth/login');
+        }
+
+        // iniciar sessão
+        req.session.userid = user.id;
+        req.flash('message', 'Login realizado com sucesso!');
+
+        req.session.save(() => {
+            res.redirect('/');
+        });
+    }
+
     static register(req, res) {
         res.render('auth/register');//render é usado quando a aplicação usa template engine
 
